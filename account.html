@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рецепты от бабули: личный кабинет</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .edit-delete-button {
+        margin-top: 10px;
+        display: flex;
+        }
+
+        .edit-button,
+        .delete-button,
+        .add-button {
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .edit-button, .add-button{
+            background-color: green; 
+            color: white;
+        }
+
+        .delete-button {
+            background-color: #f44336; 
+            color: white;
+        }
+
+        .edit-button:hover,
+        .delete-button:hover,
+        .add-button:hover {
+            opacity: 0.8;
+        }
+        a {
+            color: inherit; 
+            text-decoration: none; 
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <a href="index.html" class="menu-link">Главная</a>
+            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="server/profile.php" class="menu-link">Профиль</a>
+            <a href="about.html" class="menu-link">О нас</a>
+        </div>
+        <div class="content">
+            <div class="header">
+                <div class="add-bar">
+                    <button class="add-button" id="add-button"><a href="add_recipe.html">Добавить новый рецепт</a></button>
+                </div>
+            </div>
+            <div class="recipes">
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready( function () {
+            function deleteRecipe(recipeId) {
+                $.ajax({
+                    url: "server/delete_recipe.php",
+                    type: "POST",
+                    data: { id: recipeId },
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        if (result.status === 'success') {
+                            alert(result.message + '\n' + 'Удаленный рецепт: ' + result.recipeName);
+                            $('.recipe').find('p[data-id="' + recipeId + '"]').closest('.recipe').remove();
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            }
+
+
+            $.ajax({
+                url: "server/get_recipes.php",
+                type: "POST",
+                dataType: "json",
+                data: { category: "all", level: "all" },
+                success: function(data) {
+                    $.each(data, function(index, recipe) {
+                        var recipeHTML = '<div class="recipe">';
+                        recipeHTML += '<h2>' + recipe.name + '</h2>';
+                        recipeHTML += '<p hidden data-id="' + recipe.id + '">' + recipe.id + '</p>';
+                        recipeHTML += '<p><strong>Ингредиенты:</strong> ' + recipe.ingridients + '</p>';
+                        recipeHTML += '<p><strong>Приготовление:</strong> ' + recipe.directions + '</p>';
+                        recipeHTML += '<p><strong>Категория:</strong> ' + recipe.cathegory + '</p>';
+                        recipeHTML += '<p><strong>Уровень сложности:</strong> ' + recipe.dif + '</p>';
+                        
+                        recipeHTML += '<div class="edit-delete-button"><button class="edit-button">Изменить</button><button class="delete-button">Удалить</button></div>';
+                        recipeHTML += '</div>'
+                        $('.recipes').append(recipeHTML);
+
+                        
+                    });
+                    $(document).on('click', '.delete-button', function () {
+                        var recipeId = $(this).parent().siblings('p[data-id]').data('id');
+                        console.log(recipeId);
+                        if (confirm("Вы уверены, что хотите удалить этот рецепт?")) {
+                            deleteRecipe(recipeId);
+                            
+                        }
+                    });
+                    $(document).on('click', '.edit-button', function () {
+                        var recipeId = $(this).parent().siblings('p[data-id]').data('id');
+                        sessionStorage.setItem('recipeId', recipeId);
+                        window.location.href = 'edit_recipe.html';
+                    });
+                    
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+             
+
+            
+        })
+    </script>
+</body>
+</html>

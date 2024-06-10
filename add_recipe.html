@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рецепты от бабули: новый рецепт</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;  
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;  
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+        textarea{
+            width: 90%;
+            height: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <a href="index.html" class="menu-link">Главная</a>
+            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="server/profile.php" class="menu-link">Профиль</a>
+            <a href="about.html" class="menu-link">О нас</a>
+        </div>
+        <div class="content">
+            <h2>Добавить новый рецепт</h2>
+            <div class="recipes">
+                
+            <form id="recipeForm" >
+                <label for="recipeName">Название рецепта:</label><br>
+                <input type="text" id="recipeName" name="recipeName" required><br><br>
+
+                <label for="recipeIngredients">Ингредиенты:</label><br>
+                <textarea id="recipeIngredients" name="recipeIngredients" required></textarea><br><br>
+
+                <label for="recipeDirections">Приготовление:</label><br>
+                <textarea id="recipeDirections" name="recipeDirections" required></textarea><br><br>
+
+                <label for="recipeCategory">Категория:</label><br>
+                <select id="recipeCategory" name="recipeCategory">
+                    <option value="Завтрак">Завтрак</option>
+                    <option value="Обед">Обед</option>
+                    <option value="Ужин">Ужин</option>
+                    <option value="Перекус">Перекус</option>
+                    <option value="Супы">Супы</option>
+                    <option value="Салаты">Салаты</option>
+                    <option value="Гарниры">Гарниры</option>
+                    <option value="Закуски">Закуски</option>
+                    <option value="Выпечка">Выпечка</option>
+                    <option value="Десерты">Десерты</option>
+                    <option value="Напитки">Напитки</option>
+                    <option value="Здоровое питание">Здоровое питание</option>
+                    <option value="Вегетарианская кухня">Вегетарианская кухня</option>
+                    <option value="Веганская кухня">Веганская кухня</option>
+                    <option value="Мировая кухня">Мировая кухня</option>
+                    <option value="Рецепты сезона">Рецепты сезона</option>
+                    <option value="Детское питание">Детское питание</option>
+                    <option value="Праздничные блюда">Праздничные блюда</option>
+                    <option value="Быстрые блюда">Быстрые блюда</option>
+                    <option value="Экзотические блюда">Экзотические блюда</option>
+                </select><br><br>
+
+                <label for="recipeDifficulty">Сложность:</label><br>
+                <select id="recipeDifficulty" name="recipeDifficulty">
+                    <option value="Низкая">Низкая</option>
+                    <option value="Средняя">Средняя</option>
+                    <option value="Высокая">Высокая</option>
+                </select><br><br>
+                <button type="submit" id="submitRecipe">Добавить рецепт</button>
+            </form>
+            <div id="response-add"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('form').submit(function(e) {
+                e.preventDefault();
+                var name = $('#recipeName').val().trim();
+                var ingredients = $('#recipeIngredients').val().trim();
+                var directions = $('#recipeDirections').val().trim();
+                var category = $('#recipeCategory').val().trim();
+                var difficulty = $('#recipeDifficulty').val().trim();
+
+                if (name === '' || ingredients === '' || directions === '' || category === '' || difficulty === '') {
+                    alert('Все поля должны быть заполнены!');
+                    return; 
+                }
+
+                $.ajax({
+                    url: 'server/add.php',
+                    type: 'POST',
+                    data: {
+                        name: name,
+                        ingredients: ingredients,
+                        directions: directions,
+                        category: category,
+                        difficulty: difficulty
+                    },
+                    success: function(response) {
+                        var result = JSON.parse(response);
+                        if (result.status === 'success') {
+                            $("#response-add").html(`
+                                                        <div class="data-section">
+                                                            <p><strong>Название:</strong> ${result.data.name}</p>
+                                                            <p><strong>Ингредиенты:</strong> ${result.data.ingredients}</p>
+                                                            <p><strong>Приготовление:</strong> ${result.data.directions}</p>
+                                                            <p><strong>Категория:</strong> ${result.data.category}</p>
+                                                            <p><strong>Сложность:</strong> ${result.data.difficulty}</p>
+                                                        </div>
+                                                    `);
+                            $('#recipeForm')[0].reset();
+                            //window.location.href='account.html';
+                        } else {
+                            $('#recipeResult').html(`<p>${result.message}</p>`);
+                        }
+                    },
+                    error: function() {
+                        $('#recipeResult').html('<p>Проблемы с выполнением добавления рецепта</p>');
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>

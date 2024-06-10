@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu {
+    background-color: black;
+    color: white;
+    width: 50%;
+    padding: 10px;
+    text-align: center;
+}
+
+.menu-link {
+    text-decoration: none;
+    color: white;
+    margin-right: 10px;
+}
+
+.content {
+    width: 50%;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sort-button button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 5px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.search-bar button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.recipes {
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.recipe {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+mark {
+    background-color:#32CD32;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+

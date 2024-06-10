@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рецепты бабули: регистрация</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        form {
+            width: 50%; 
+            margin: 0 auto; 
+        }
+
+        .form-group {
+            text-align: center;
+            margin-bottom: 20px; 
+        }
+
+        .form-group input, button {
+            width: calc(100% - 22px); 
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; 
+            vertical-align: middle; 
+        }
+
+        button {
+            margin-left: 2px; 
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <a href="index.html" class="menu-link">Главная</a>
+            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="server/profile.php" class="menu-link">Профиль</a>
+            <a href="about.html" class="menu-link">О нас</a>
+        </div>
+        <div class="content">
+            <div class="recipes">
+                <h2>Регистрация</h2>
+                <form action="server/signup.php" method="post">
+                    <div class="form-group">
+                        <input type="text" placeholder="Логин..." id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Пароль..." id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Повторите пароль..." id="repeatpassword" name="repeatpassword" required>
+                    </div>
+                    <button type="submit">Зарегистрироваться</button>
+                </form>
+                <a href="login.html">У Вас уже есть аккаунт?</a>
+                <div class="error-message" id="error-message"></div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

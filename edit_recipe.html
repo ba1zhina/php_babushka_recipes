@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рецепты от бабули: изменить рецепт</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;  
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;  
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+        textarea{
+            width: 90%;
+            height: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <a href="index.html" class="menu-link">Главная</a>
+            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="server/profile.php" class="menu-link">Профиль</a>
+            <a href="about.html" class="menu-link">О нас</a>
+        </div>
+        <div class="content">
+            <h2>Изменить рецепт</h2>
+            <div class="recipes">
+            <form id="recipeForm" >
+                <label for="recipeName">Название рецепта:</label><br>
+                <input type="text" id="recipeName" name="recipeName" required><br><br>
+
+                <label for="recipeIngredients">Ингредиенты:</label><br>
+                <textarea id="recipeIngredients" name="recipeIngredients" required></textarea><br><br>
+
+                <label for="recipeDirections">Приготовление:</label><br>
+                <textarea id="recipeDirections" name="recipeDirections" required></textarea><br><br>
+
+                <label for="recipeCategory">Категория:</label><br>
+                <select id="recipeCategory" name="recipeCategory">
+                    <option value="Завтрак">Завтрак</option>
+                    <option value="Обед">Обед</option>
+                    <option value="Ужин">Ужин</option>
+                    <option value="Перекус">Перекус</option>
+                    <option value="Супы">Супы</option>
+                    <option value="Салаты">Салаты</option>
+                    <option value="Гарниры">Гарниры</option>
+                    <option value="Закуски">Закуски</option>
+                    <option value="Выпечка">Выпечка</option>
+                    <option value="Десерты">Десерты</option>
+                    <option value="Напитки">Напитки</option>
+                    <option value="Здоровое питание">Здоровое питание</option>
+                    <option value="Вегетарианская кухня">Вегетарианская кухня</option>
+                    <option value="Веганская кухня">Веганская кухня</option>
+                    <option value="Мировая кухня">Мировая кухня</option>
+                    <option value="Рецепты сезона">Рецепты сезона</option>
+                    <option value="Детское питание">Детское питание</option>
+                    <option value="Праздничные блюда">Праздничные блюда</option>
+                    <option value="Быстрые блюда">Быстрые блюда</option>
+                    <option value="Экзотические блюда">Экзотические блюда</option>
+                </select><br><br>
+
+                <label for="recipeDifficulty">Сложность:</label><br>
+                <select id="recipeDifficulty" name="recipeDifficulty">
+                    <option value="Низкая">Низкая</option>
+                    <option value="Средняя">Средняя</option>
+                    <option value="Высокая">Высокая</option>
+                </select><br><br>
+                <button type="submit" id="submitRecipe">Изменить рецепт</button>
+            </form>
+            <div id="response-add"></div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var recipeId = sessionStorage.getItem('recipeId');
+            sessionStorage.removeItem('recipeId'); 
+            console.log(recipeId);
+
+            $.ajax({
+                url: 'server/get_recipes_for_change.php', 
+                type: 'GET',
+                data: { id: recipeId },
+                success: function(response) {
+                    var recipe = JSON.parse(response);
+                    console.log(recipe)
+                    $('#recipeName').val(recipe.name);
+                    $('#recipeIngredients').val(recipe.ingridients);
+                    $('#recipeDirections').val(recipe.directions);
+                    $('#recipeCategory').val(recipe.cathegory);
+                    $('#recipeDifficulty').val(recipe.dif);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+
+            $('#recipeForm').submit(function (e) {
+                e.preventDefault();
+
+                var recipeName = $('#recipeName').val().trim();
+                var recipeIngredients = $('#recipeIngredients').val().trim();
+                var recipeDirections = $('#recipeDirections').val().trim();
+                var recipeCategory = $('#recipeCategory').val().trim();
+                var recipeDifficulty = $('#recipeDifficulty').val().trim();
+
+                if (recipeName === '' || recipeIngredients === '' || recipeDirections === '' || recipeCategory === '' || recipeDifficulty === '') {
+                    alert('Все поля должны быть заполнены!');
+                    return; 
+                }
+                        
+
+                $.ajax({
+                    url: 'server/change_recipe.php',
+                    type: 'POST',
+                    data: {
+                        recipeId: recipeId,
+                        recipeName: recipeName,
+                        recipeIngredients: recipeIngredients,
+                        recipeDirections: recipeDirections,
+                        recipeCategory: recipeCategory,
+                        recipeDifficulty: recipeDifficulty
+                    },
+                    success: function(response) {
+                        var result = JSON.parse(response);
+                        if (result.status === 'success') {
+                            $("#response-add").html('<div class="response-message">' + result.message + '</div>' +
+                                                    '<div class="data-section">' +
+                                                        '<h3>Старые данные:</h3>' +
+                                                        '<p><strong>Название:</strong> ' + result.old_data.name + '</p>' +
+                                                        '<p><strong>Ингредиенты:</strong> ' + result.old_data.ingridients + '</p>' +
+                                                        '<p><strong>Приготовление:</strong> ' + result.old_data.directions + '</p>' +
+                                                        '<p><strong>Категория:</strong> ' + result.old_data.cathegory + '</p>' +
+                                                        '<p><strong>Сложность:</strong> ' + result.old_data.dif + '</p>' +
+                                                    '</div>' +
+                                                    '<div class="data-section">' +
+                                                        '<h3>Новые данные:</h3>' +
+                                                        '<p><strong>Название:</strong> ' + result.new_data.name + '</p>' +
+                                                        '<p><strong>Ингредиенты:</strong> ' + result.new_data.ingredients + '</p>' +
+                                                        '<p><strong>Приготовление:</strong> ' + result.new_data.directions + '</p>' +
+                                                        '<p><strong>Категория:</strong> ' + result.new_data.category + '</p>' +
+                                                        '<p><strong>Сложность:</strong> ' + result.new_data.difficulty + '</p>' +
+                                                    '</div>')
+        
+                            //window.location.href = 'account.html';
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

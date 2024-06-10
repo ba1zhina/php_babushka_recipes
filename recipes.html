@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рецепты от бабули: рецепты</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cathegory select, .level select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+        }
+
+        .cathegory select:focus, .level select:focus {
+            outline: none;
+            border-color: green; 
+        }
+        .space {
+        width: 45%; 
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <a href="index.html" class="menu-link">Главная</a>
+            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="server/profile.php" class="menu-link">Профиль</a>
+            <a href="about.html" class="menu-link">О нас</a>
+        </div>
+        <div class="content">
+            <div class="header">
+                <div class="level">
+                    <select id="levelSelect">
+                        <option value="all">Cложность</option>
+                    </select>
+                </div>
+                <div class="cathegory">
+                    <select id="categorySelect">
+                        <option value="all">Категория</option>
+                    </select>
+                </div>
+                <div class="space">
+
+                </div>
+                <div class="search-bar">
+                    <input id="search" type="text" placeholder="Поиск...">
+                </div>
+            </div>
+            <div class="recipes">
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+    
+            function loadRecipes(category, level) {
+
+                $('.recipes').empty();
+                $.ajax({
+                    url: "server/get_recipes.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: { category: category, level: level }, 
+                    success: function(data) {
+                        $('.recipes').empty(); 
+                        $.each(data, function(index, recipe) {
+                            var recipeHTML = '<div class="recipe">';
+                            recipeHTML += '<h2>' + recipe.name + '</h2>';
+                            recipeHTML += '<p><strong>Ингредиенты:</strong> ' + recipe.ingridients + '</p>';
+                            recipeHTML += '<p><strong>Приготовление:</strong> ' + recipe.directions + '</p>';
+                            recipeHTML += '<p><strong>Категория:</strong> ' + recipe.cathegory + '</p>';
+                            recipeHTML += '<p><strong>Уровень сложности:</strong> ' + recipe.dif + '</p>';
+                            recipeHTML += '</div>';
+
+                            $('.recipes').append(recipeHTML);
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            }
+
+    
+            loadRecipes('all','all');
+
+            $.ajax({
+                url: "server/get_categories.php",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $.each(data, function(index, category) {
+                        $('#categorySelect').append('<option value="' + category + '">' + category + '</option>');
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+
+            $.ajax({
+                url: "server/get_level.php",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $.each(data, function(index, level) {
+                        $('#levelSelect').append('<option value="' + level + '">' + level + '</option>');
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+            $('#categorySelect, #levelSelect').change(function() {
+            var selectedCategory = $('#categorySelect').val();
+            var selectedLevel = $('#levelSelect').val();
+            loadRecipes(selectedCategory, selectedLevel); 
+        
+            });
+
+            $('#search').on('input', function() {
+                var searchText = $(this).val().toLowerCase();
+                
+                $('.recipes .recipe').each(function() {
+                    var recipeTitle = $(this).find('h2').text();
+                    var titleText = recipeTitle.toLowerCase();
+                    var pos = titleText.indexOf(searchText);
+                    if (pos !== -1) {
+                        $(this).show();
+                        recipeTitle = insertMark(recipeTitle, pos, searchText.length);
+                        $(this).find('h2').html(recipeTitle);
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            function insertMark(string, pos, len) {
+                return string.slice(0, pos) + "<mark>" + string.slice(pos, pos + len) + "</mark>" + string.slice(pos + len);
+            }
+
+        });
+        </script>
+</body>
+</html>
