@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Рецепты от бабули: личный кабинет</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .edit-delete-button {
@@ -49,15 +49,15 @@
 <body>
     <div class="container">
         <div class="menu">
-            <a href="index.html" class="menu-link">Главная</a>
-            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="views/index.html" class="menu-link">Главная</a>
+            <a href="views/recipes.html" class="menu-link">Рецепты</a>
             <a href="server/profile.php" class="menu-link">Профиль</a>
-            <a href="about.html" class="menu-link">О нас</a>
+            <a href="views/about.html" class="menu-link">О нас</a>
         </div>
         <div class="content">
             <div class="header">
                 <div class="add-bar">
-                    <button class="add-button" id="add-button"><a href="add_recipe.html">Добавить новый рецепт</a></button>
+                    <button class="add-button" id="add-button"><a href="views/add_recipe.html">Добавить новый рецепт</a></button>
                 </div>
             </div>
             <div class="recipes">
@@ -119,7 +119,7 @@
                     $(document).on('click', '.edit-button', function () {
                         var recipeId = $(this).parent().siblings('p[data-id]').data('id');
                         sessionStorage.setItem('recipeId', recipeId);
-                        window.location.href = 'edit_recipe.html';
+                        window.location.href = 'views/edit_recipe.html';
                     });
                     
                 },

@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Рецепты от бабули: изменить рецепт</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public/style.css">
     <style>
         select {
             padding: 5px;
@@ -36,10 +35,10 @@
 <body>
     <div class="container">
         <div class="menu">
-            <a href="index.html" class="menu-link">Главная</a>
-            <a href="recipes.html" class="menu-link">Рецепты</a>
+            <a href="views/index.html" class="menu-link">Главная</a>
+            <a href="views/recipes.html" class="menu-link">Рецепты</a>
             <a href="server/profile.php" class="menu-link">Профиль</a>
-            <a href="about.html" class="menu-link">О нас</a>
+            <a href="views/about.html" class="menu-link">О нас</a>
         </div>
         <div class="content">
             <h2>Изменить рецепт</h2>
@@ -164,7 +163,7 @@
                                                         '<p><strong>Сложность:</strong> ' + result.new_data.difficulty + '</p>' +
                                                     '</div>')
         
-                            //window.location.href = 'account.html';
+                            //window.location.href = 'views/account.html';
                         } else {
                             alert(result.message);
                         }

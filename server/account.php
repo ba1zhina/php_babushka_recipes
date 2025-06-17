@@ -9,7 +9,7 @@ $username = $_SESSION['username'];
 <head>
     <meta charset="UTF-8">
     <title>Аккаунт</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../public/style.css">
     <style>
         .content h1 {
             color: #333;
@@ -35,14 +35,14 @@ $username = $_SESSION['username'];
 <body>
 <div class="container">
         <div class="menu">
-            <a href="../index.html" class="menu-link">Главная</a>
-            <a href="../recipes.html" class="menu-link">Рецепты</a>
+            <a href="../views/index.html" class="menu-link">Главная</a>
+            <a href="../views/recipes.html" class="menu-link">Рецепты</a>
             <a href="profile.php" class="menu-link">Профиль</a>
-            <a href="../about.html" class="menu-link">О нас</a>
+            <a href="../views/about.html" class="menu-link">О нас</a>
         </div>
         <div class="content">
             <h1>Добро пожаловать, <?php echo htmlspecialchars($username); ?>!</h1>
-            <a href="../account.html">Аккаунт</a>
+            <a href="../views/account.html">Аккаунт</a>
             <a href="logout.php">Выйти</a>
         </div>
     </div>

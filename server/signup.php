@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         $_SESSION['username'] = $username;
         echo "Регистрация успешна! Перенаправление...";
-        header("Location: ../account.html");
+        header("Location: ../views/account.html");
         exit;
     } else {
         echo "Ошибка: " . $stmt->error;

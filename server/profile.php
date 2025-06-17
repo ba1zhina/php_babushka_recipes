@@ -5,7 +5,7 @@ if (isset($_SESSION['username'])) {
     header("Location: account.php");
     exit;
 } else {
-    header("Location: ../login.html");
+    header("Location: ../views/login.html");
     exit;
 }
 ?>

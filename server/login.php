@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($password === $stored_password) {
             $_SESSION['username'] = $username;
             echo "Вход успешен! Перенаправление...";
-            header("Location: ../account.html");
+            header("Location: ../views/account.html");
             exit;
         } else {
             echo "Неверный пароль!";
